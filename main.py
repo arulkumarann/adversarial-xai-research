@@ -113,7 +113,7 @@ transform = transforms.Compose([
 
 # Replace this path with your images directory
 dataset = ImageFolderDataset(root_dir=r"/teamspace/studios/this_studio/xai-fgsm/src/data/imagenet", transform=transform)
-img, _, img_name = dataset[10]  # Get image and its filename
+img, _, img_name = dataset[5]  # Get image and its filename
 img = img.unsqueeze(0).to(DEVICE)
 # Using 0 as dummy label since we don't have actual labels
 label = torch.tensor([0]).to(DEVICE)
