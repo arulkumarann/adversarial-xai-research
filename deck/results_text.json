@@ -1,0 +1,78 @@
+{
+  "attack_title": "The attacks fool the model; random noise does not",
+  "attack_takeaway": "The random-noise control fools 0 of 20 images; FGSM fools 90%, JSMA 85%, BIM and latent PGD 100%. FGSM, BIM and latent PGD share the budget ε = 8/255. JSMA changes only about 1,300 values (2% of pixels) but by large amounts, so its L∞ is 0.94. BIM, latent PGD and JSMA keep image SSIM near 0.9, FGSM 0.79.",
+  "qual_title": {
+    "noise": "Control: random noise leaves Grad-CAM unchanged",
+    "fgsm": "FGSM: the label flips, Grad-CAM weakens and shifts",
+    "bim": "BIM: confident wrong label, the evidence vanishes",
+    "jsma": "JSMA: the label flips but Grad-CAM barely moves",
+    "latent": "Latent PGD: Grad-CAM jumps to the background"
+  },
+  "qual": {
+    "noise": [
+      "One example: a European fire salamander.",
+      "With random ±8/255 noise the model still says fire salamander (95%).",
+      "Grad-CAM and CAM keep their shape (SSIM 0.98) and SHAP 0.90.",
+      "LIME with its own superpixels drops to 0.31 only because the superpixels change; with the clean superpixels it stays at 0.90."
+    ],
+    "fgsm": [
+      "Predicted: spotted salamander (41%), a close relative.",
+      "Grad-CAM and CAM weaken and slide off the head (SSIM 0.76 and 0.75).",
+      "LIME 0.34, SHAP 0.69.",
+      "The change is invisible at this scale (image SSIM 0.92)."
+    ],
+    "bim": [
+      "Predicted: spiny lobster (100%).",
+      "The map for the original class disappears (Grad-CAM SSIM 0.03): the network finds no evidence for the salamander any more.",
+      "LIME 0.29, SHAP 0.54.",
+      "Image SSIM stays 0.96."
+    ],
+    "jsma": [
+      "Predicted: spotted salamander (54%) after changing a sparse set of values (the coloured dots).",
+      "Grad-CAM and CAM barely move (SSIM 0.94).",
+      "LIME (0.40) and SHAP (0.48) change more.",
+      "A sparse attack can flip the label and spare the heat-map."
+    ],
+    "latent": [
+      "Predicted: admiral butterfly (95%).",
+      "Grad-CAM and CAM (SSIM 0.12 and 0.11) leave the animal and light up the lower corners.",
+      "LIME 0.24, SHAP 0.51.",
+      "The explanation now points at the background. Image SSIM 0.96."
+    ]
+  },
+  "ssim_title": "Gradient maps resist weak attacks, not strong ones",
+  "ssim_takeaway": [
+    "Mean explanation SSIM over 20 images (1 = unchanged).",
+    "Noise: Grad-CAM and CAM 0.96, SHAP 0.75, LIME 0.35 (0.74 with fixed superpixels).",
+    "FGSM and JSMA: Grad-CAM and CAM keep 0.73 and 0.88, well above LIME and SHAP.",
+    "BIM and latent PGD: every method falls to 0.25 to 0.40, and Grad-CAM loses its lead."
+  ],
+  "table_title": "Three similarity measures tell the same story",
+  "stats_noise_title": "Attacks move explanations more than noise does",
+  "stats_noise_takeaway": "FGSM, BIM and latent PGD move Grad-CAM, CAM, SHAP and fixed-superpixel LIME significantly more than random noise of the same size (all p < 0.001). JSMA does too, with smaller effects (p ≤ 0.013). LIME with its own superpixels is already disturbed by noise alone (SSIM 0.35), so attacks add little there and only BIM is significant. Hypothesis H1 is supported.",
+  "stats_methods_title": "Grad-CAM wins only against weak attacks",
+  "stats_methods_takeaway": "Under FGSM and JSMA, Grad-CAM keeps its explanation significantly better than LIME (+0.41, +0.46), fixed-superpixel LIME (+0.30, +0.31) and SHAP (+0.22, +0.23), all p < 0.01. Under BIM and latent PGD no significant difference remains, and SHAP is nominally ahead. Grad-CAM and CAM do not differ (below 0.01), as expected on DenseNet. H2 holds only for weak or sparse attacks.",
+  "sweep_title": "Explanation damage grows with attack strength",
+  "sweep_takeaway": "BIM at ε = 1/255 is invisible (image SSIM 0.997) yet fools all 20 images and already lowers Grad-CAM SSIM to 0.65. At 16/255 it is 0.18. The label is fooled at every budget, so only the explanation shows a dose-response. H4 is supported.",
+  "supp_title": "Checks behind the main result",
+  "supp_note": "20 images. All tables are in results/*.csv.",
+  "messages": [
+    [
+      "Attacks distort explanations",
+      "FGSM, BIM, JSMA and latent PGD all change explanations significantly more than random noise of equal size (Grad-CAM, CAM, SHAP, fixed LIME; p < 0.015). Explanation damage is a real side effect of adversarial examples."
+    ],
+    [
+      "No method survives strong attacks",
+      "Against FGSM and JSMA, Grad-CAM and CAM keep their maps best (SSIM 0.73 and 0.88). Against BIM and latent PGD every method collapses to 0.25 to 0.40 and Grad-CAM loses its lead."
+    ],
+    [
+      "Looking unchanged is not enough",
+      "BIM, latent PGD and JSMA keep image SSIM near 0.9, yet Grad-CAM SSIM is 0.25, 0.29 and 0.88. Image similarity does not predict explanation stability. JSMA hurts LIME and SHAP more than Grad-CAM."
+    ],
+    [
+      "Strength matters; LIME needs care",
+      "Damage grows steadily from ε = 1/255 to 16/255. LIME is unstable even without an attack (re-run SSIM 0.67, and 0.35 with new superpixels), so it needs fixed superpixels and a noise floor."
+    ]
+  ],
+  "discussion_note": "Differs from the earlier draft (Grad-CAM 0.91 under BIM, JSMA most damaging), which rested on two images. Here n = 20."
+}

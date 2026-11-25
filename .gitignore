@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Data and large local files (never commit)
+data/
+*.zip
+papers/
+
+# Generated, large or machine-specific
+results/raw/
+results/log_*.txt
+deck/_eq/
+deck/__pycache__/
+
+# Scratch
+.ipynb_checkpoints/
+.DS_Store
+
+# Large per-image figures not used in the deck (regenerate with analyze.py)
+results/figures/qual_*.png
+results/figures/deck_000_*.png
+results/figures/deck_001_*.png
+results/figures/deck_005_*.png
+results/STOPPED_AT_20.txt
+
+# Generated documents (PowerPoint, Word, reports): kept out of the code tree
+misc/
